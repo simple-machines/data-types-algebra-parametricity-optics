@@ -1,0 +1,192 @@
+\begin{frame}[fragile]
+\frametitle{Let's talk about}
+\begin{center}
+Parametricity
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Consider the following Java function \ldots}
+\begin{block}{}
+\begin{lstlisting}[style=java]
+boolean boolean2boolean(boolean b) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{center}
+How many possible programs can be written that satisfy the type?
+
+i.e. from the type, how much knowledge have we gained?
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What about this Java function \ldots}
+\begin{block}{}
+\begin{lstlisting}[style=java]
+String string2string(String s) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{center}
+from the type, how much knowledge have we gained?
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{OK now this Java function \ldots}
+\begin{block}{}
+\begin{lstlisting}[style=java]
+<A> A any2any(A a) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{center}
+How many possible programs can be written that satisfy the type?
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values}
+\begin{block}{By utilising \emph{polymorphic} values in a type \ldots}
+\begin{center}
+we have gained a \textbf{lot} of knowledge of our function's behaviour
+
+In this case, we have obtained \emph{total} knowledge
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values}
+\begin{block}{Parametricity}
+\begin{center}
+This idea of using parametric polymorphism to determine a function's behaviour is called \emph{parametricity}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{What is Parametricity and Free Theorems}
+\begin{block}{Philip Wadler \cite{wadler1989theorems} tells us:}
+\begin{quotation}
+Write down the definition of a polymorphic function on a piece of paper. Tell me its type, but be careful not to let me see the function's definition. I will tell you a theorem that the function satisfies.
+
+The purpose of this paper is to explain the trick.
+\end{quotation}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Try this Java function \ldots}
+\begin{block}{}
+\begin{lstlisting}[style=java]
+List<String> strings2strings(List<String> s) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{center}
+from the type, how much knowledge have we gained?
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values}
+\begin{block}{This type has no polymorphic values}
+\begin{lstlisting}[style=java]
+List<String> strings2strings(List<String> x) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values}
+\begin{block}{Can we determine function behaviour?}
+\begin{lstlisting}[style=java]
+<T> List<T> anythings2anythings(List<T> x) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{block}{Theorem}
+\textbf{every element in the resulting list, appears in the input list}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values}
+\begin{block}{Some amount of function behaviour}
+\begin{lstlisting}[style=java]
+<T> List<T> anythings2anythings(List<T> x) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{block}{Theorem}
+We have \textbf{some} amount of information, but not \textbf{total} information
+
+Let's write an \emph{automated} test
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values and tests}
+\begin{block}{Can we determine function behaviour?}
+\begin{lstlisting}[style=java]
+<T> List<T> anythings2anythings(List<T> x) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{block}{Tests}
+\begin{lstlisting}[style=haskell]
+prop_anythings2anythings1 :: Property
+prop_anythings2anythings1 =
+  property $ do
+    x <- forAll alpha
+    anythings2anythings [x] == [x]
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Polymorphic values and tests}
+\begin{block}{Can we determine function behaviour?}
+\begin{lstlisting}[style=java]
+<T> List<T> anythings2anythings(List<T> x) {
+  // hidden from view 
+}
+\end{lstlisting}
+\end{block}
+\begin{block}{Tests}
+\begin{lstlisting}[style=haskell]
+prop_anythings2anythings2 :: Property
+prop_anythings2anythings2 =
+  property $ do
+    x <- forAll (list (linear 0 100) alpha)
+    y <- forAll (list (linear 0 100) alpha)
+    anythings2anythings (x ++ y) ==
+      anythings2anythings y ++ anythings2anythings x
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Types and tests}
+\begin{block}{By this method, it becomes very explicit that \ldots}
+\begin{itemize}
+\item Types alone provide a \emph{proof} of a proposition
+\item Polymorphic types provide \emph{additional theorems}
+      
+      i.e. free theorems
+\item Tests provide a \emph{failed negative proof} of a proposition
+\item This outcome is the \emph{only} difference between types and tests
+\end{itemize}
+\end{block}
+\end{frame}

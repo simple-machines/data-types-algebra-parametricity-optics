@@ -1,0 +1,4 @@
+#!/bin/sh
+
+evince --page-index=1 --presentation dist/data-types-algebra-parametricity-optics.pdf
+
